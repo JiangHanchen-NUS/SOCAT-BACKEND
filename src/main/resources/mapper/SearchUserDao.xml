@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.somiao.miniprogram.dao.SearchUserDao">
+    <!-- 定义的resultMap，可以解决类的属性名和数据库列名不一致的问题-->
+    <resultMap id="BaseResultMap2" type="com.somiao.miniprogram.entity.User">
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
+        <result column="userCode" jdbcType="VARCHAR" property="userCode" />
+        <result column="image" jdbcType="VARCHAR" property="image" />
+        <result column="log" jdbcType="VARCHAR" property="log" />
+        <result column="helpMessage" jdbcType="VARCHAR" property="helpMessage" />
+        <result column="comment" jdbcType="VARCHAR" property="comment" />
+        <result column="submissionDate" jdbcType="VARCHAR" property="submissionDate" />
+    </resultMap>
+    <sql id="base_column_list2">
+        userName,userCode,image,log,helpMessage,comment,submissionDate
+    </sql>
+    <select id="searchByUserName" parameterType="java.lang.String" resultMap="BaseResultMap2">
+        select
+        <include refid="base_column_list2" />
+        from userinfo
+        where userName = #{userName,jdbcType=VARCHAR}
+    </select>
+    <select id="searchAll"  resultMap="BaseResultMap2">
+        select
+        <include refid="base_column_list2"/>
+        from user
+    </select>
+    <insert id="addUser" keyColumn="UserName" keyProperty="id" parameterType="com.somiao.miniprogram.entity.User" useGeneratedKeys="true">
+        insert into user ( userName, userCode,image,log, helpMessage,comment,submissionDate)
+        values (#{userName,jdbcType=VARCHAR},#{userCode,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{log,jdbcType=VARCHAR},
+                #{helpMessage,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, #{submissionDate,jdbcType=VARCHAR},
+               )
+    </insert>
+    <delete id="deleteUser" parameterType="java.lang.String">
+        delete from user
+        where userName = #{userName,jdbcType=VARCHAR}
+    </delete>
+    <update id="updateUser" parameterType="com.somiao.miniprogram.entity.User">
+        update user
+        <set>
+            <if test=" userCode != null">
+                userCode = #{ userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="log != null">
+                log = #{log,jdbcType=VARCHAR},
+            </if>
+            <if test="helpMessage != null">
+                helpMessage = #{helpMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="submissionDate != null">
+                submissionDate = #{submissionDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where userName = #{userName,jdbcType=VARCHAR}
+    </update>
+
+</mapper>
